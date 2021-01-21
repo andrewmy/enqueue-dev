@@ -4,7 +4,11 @@ namespace Enqueue\Test;
 
 use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\SkippedTestError;
+use PHPUnit\Util\Test;
 
+/**
+ * @property string $name Inherited from TestCase
+ */
 trait RetryTrait
 {
     public function runBare(): void
@@ -46,7 +50,7 @@ trait RetryTrait
      */
     private function getNumberOfRetries()
     {
-        $annotations = $this->getAnnotations();
+        $annotations = Test::parseTestMethodAnnotations(static::class, $this->name);
 
         if (isset($annotations['method']['retry'][0])) {
             return $annotations['method']['retry'][0];
