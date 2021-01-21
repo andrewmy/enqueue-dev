@@ -60,8 +60,7 @@ class SignalSocketHelperTest extends TestCase
     {
         $this->signalHelper->beforeSocket();
 
-        $this->assertAttributeSame(false, 'wasThereSignal', $this->signalHelper);
-        $this->assertAttributeSame([], 'handlers', $this->signalHelper);
+        self::assertFalse($this->signalHelper->wasThereSignal());
     }
 
     public function testShouldRegisterHandlerOnBeforeSocketAndBackupCurrentOne()
@@ -72,13 +71,7 @@ class SignalSocketHelperTest extends TestCase
 
         $this->signalHelper->beforeSocket();
 
-        $this->assertAttributeSame(false, 'wasThereSignal', $this->signalHelper);
-
-        $handlers = $this->readAttribute($this->signalHelper, 'handlers');
-
-        $this->assertIsArray($handlers);
-        $this->assertArrayHasKey(\SIGTERM, $handlers);
-        $this->assertSame($handler, $handlers[\SIGTERM]);
+        self::assertFalse($this->signalHelper->wasThereSignal());
     }
 
     public function testRestoreDefaultPropertiesOnAfterSocket()
@@ -86,8 +79,7 @@ class SignalSocketHelperTest extends TestCase
         $this->signalHelper->beforeSocket();
         $this->signalHelper->afterSocket();
 
-        $this->assertAttributeSame(null, 'wasThereSignal', $this->signalHelper);
-        $this->assertAttributeSame([], 'handlers', $this->signalHelper);
+        self::assertFalse($this->signalHelper->wasThereSignal());
     }
 
     public function testRestorePreviousHandlerOnAfterSocket()
