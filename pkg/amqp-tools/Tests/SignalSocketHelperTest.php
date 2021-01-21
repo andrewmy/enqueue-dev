@@ -3,10 +3,13 @@
 namespace Enqueue\AmqpTools\Tests;
 
 use Enqueue\AmqpTools\SignalSocketHelper;
+use Enqueue\Test\ReadAttributeTrait;
 use PHPUnit\Framework\TestCase;
 
 class SignalSocketHelperTest extends TestCase
 {
+    use ReadAttributeTrait;
+
     /**
      * @var SignalSocketHelper
      */
@@ -61,6 +64,7 @@ class SignalSocketHelperTest extends TestCase
         $this->signalHelper->beforeSocket();
 
         self::assertFalse($this->signalHelper->wasThereSignal());
+        $this->assertAttributeSame([], 'handlers', $this->signalHelper);
     }
 
     public function testShouldRegisterHandlerOnBeforeSocketAndBackupCurrentOne()
@@ -72,6 +76,12 @@ class SignalSocketHelperTest extends TestCase
         $this->signalHelper->beforeSocket();
 
         self::assertFalse($this->signalHelper->wasThereSignal());
+
+        $handlers = $this->readAttribute($this->signalHelper, 'handlers');
+
+        self::assertIsArray($handlers);
+        self::assertArrayHasKey(\SIGTERM, $handlers);
+        self::assertSame($handler, $handlers[\SIGTERM]);
     }
 
     public function testRestoreDefaultPropertiesOnAfterSocket()
@@ -79,7 +89,8 @@ class SignalSocketHelperTest extends TestCase
         $this->signalHelper->beforeSocket();
         $this->signalHelper->afterSocket();
 
-        self::assertFalse($this->signalHelper->wasThereSignal());
+        $this->assertAttributeSame(null, 'wasThereSignal', $this->signalHelper);
+        $this->assertAttributeSame([], 'handlers', $this->signalHelper);
     }
 
     public function testRestorePreviousHandlerOnAfterSocket()

@@ -13,4 +13,9 @@ trait ReadAttributeTrait
 
         return $value;
     }
+
+    private function assertAttributeSame($expected, string $attribute, object $object): void
+    {
+        static::assertSame($expected, $this->readAttribute($object, $attribute));
+    }
 }
