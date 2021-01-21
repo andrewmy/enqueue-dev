@@ -18,4 +18,19 @@ trait ReadAttributeTrait
     {
         static::assertSame($expected, $this->readAttribute($object, $attribute));
     }
+
+    private function assertAttributeEquals($expected, string $attribute, object $object): void
+    {
+        static::assertEquals($expected, $this->readAttribute($object, $attribute));
+    }
+
+    private function assertAttributeInstanceOf(string $expected, string $attribute, object $object): void
+    {
+        static::assertInstanceOf($expected, $this->readAttribute($object, $attribute));
+    }
+
+    private function assertAttributeCount(int $count, string $attribute, object $object): void
+    {
+        static::assertCount($count, $this->readAttribute($object, $attribute));
+    }
 }
