@@ -115,8 +115,18 @@ jobs:
             unit_tests: false
             functional_tests: true
             prepare_container: true
+          - php: 7.4
+            symfony_version: 5.2.*
+            unit_tests: false
+            functional_tests: true
+            prepare_container: true
           - php: 7.1
             symfony_version: 4.3.*
+            unit_tests: false
+            rdkafka_tests: true
+            prepare_container: true
+          - php: 7.4
+            symfony_version: 5.2.*
             unit_tests: false
             rdkafka_tests: true
             prepare_container: true
