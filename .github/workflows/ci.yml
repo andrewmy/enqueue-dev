@@ -120,7 +120,6 @@ jobs:
             unit_tests: false
             rdkafka_tests: true
             prepare_container: true
-            experimental: true
 
     name: PHP ${{ matrix.php }} tests on Sf ${{ matrix.symfony_version }}, unit=${{ matrix.unit_tests }}, func=${{ matrix.functional_tests }}, rdkafka=${{ matrix.rdkafka_tests }}
 
