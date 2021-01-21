@@ -16,7 +16,7 @@ class SignalSocketHelperTest extends TestCase
 
     private $backupSigIntHandler;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -25,16 +25,16 @@ class SignalSocketHelperTest extends TestCase
             $this->markTestSkipped('PHP 7.1+ needed');
         }
 
-        $this->backupSigTermHandler = pcntl_signal_get_handler(SIGTERM);
-        $this->backupSigIntHandler = pcntl_signal_get_handler(SIGINT);
+        $this->backupSigTermHandler = pcntl_signal_get_handler(\SIGTERM);
+        $this->backupSigIntHandler = pcntl_signal_get_handler(\SIGINT);
 
-        pcntl_signal(SIGTERM, SIG_DFL);
-        pcntl_signal(SIGINT, SIG_DFL);
+        pcntl_signal(\SIGTERM, \SIG_DFL);
+        pcntl_signal(\SIGINT, \SIG_DFL);
 
         $this->signalHelper = new SignalSocketHelper();
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -43,11 +43,11 @@ class SignalSocketHelperTest extends TestCase
         }
 
         if ($this->backupSigTermHandler) {
-            pcntl_signal(SIGTERM, $this->backupSigTermHandler);
+            pcntl_signal(\SIGTERM, $this->backupSigTermHandler);
         }
 
         if ($this->backupSigIntHandler) {
-            pcntl_signal(SIGINT, $this->backupSigIntHandler);
+            pcntl_signal(\SIGINT, $this->backupSigIntHandler);
         }
     }
 
@@ -68,7 +68,7 @@ class SignalSocketHelperTest extends TestCase
     {
         $handler = function () {};
 
-        pcntl_signal(SIGTERM, $handler);
+        pcntl_signal(\SIGTERM, $handler);
 
         $this->signalHelper->beforeSocket();
 
@@ -77,8 +77,8 @@ class SignalSocketHelperTest extends TestCase
         $handlers = $this->readAttribute($this->signalHelper, 'handlers');
 
         $this->assertIsArray($handlers);
-        $this->assertArrayHasKey(SIGTERM, $handlers);
-        $this->assertSame($handler, $handlers[SIGTERM]);
+        $this->assertArrayHasKey(\SIGTERM, $handlers);
+        $this->assertSame($handler, $handlers[\SIGTERM]);
     }
 
     public function testRestoreDefaultPropertiesOnAfterSocket()
@@ -94,12 +94,12 @@ class SignalSocketHelperTest extends TestCase
     {
         $handler = function () {};
 
-        pcntl_signal(SIGTERM, $handler);
+        pcntl_signal(\SIGTERM, $handler);
 
         $this->signalHelper->beforeSocket();
         $this->signalHelper->afterSocket();
 
-        $this->assertSame($handler, pcntl_signal_get_handler(SIGTERM));
+        $this->assertSame($handler, pcntl_signal_get_handler(\SIGTERM));
     }
 
     public function testThrowsIfBeforeSocketCalledSecondTime()
@@ -115,7 +115,7 @@ class SignalSocketHelperTest extends TestCase
     {
         $this->signalHelper->beforeSocket();
 
-        posix_kill(getmypid(), SIGINT);
+        posix_kill(getmypid(), \SIGINT);
         pcntl_signal_dispatch();
 
         $this->assertTrue($this->signalHelper->wasThereSignal());

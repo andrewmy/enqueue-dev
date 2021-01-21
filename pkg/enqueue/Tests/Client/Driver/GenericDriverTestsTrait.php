@@ -2,6 +2,7 @@
 
 namespace Enqueue\Tests\Client\Driver;
 
+use DMS\PHPUnitExtensions\ArraySubset\Assert;
 use Enqueue\Client\Config;
 use Enqueue\Client\DriverInterface;
 use Enqueue\Client\Message;
@@ -14,7 +15,6 @@ use Interop\Queue\Message as InteropMessage;
 use Interop\Queue\Producer as InteropProducer;
 use Interop\Queue\Queue as InteropQueue;
 use Interop\Queue\Topic as InteropTopic;
-use DMS\PHPUnitExtensions\ArraySubset\Assert;
 
 trait GenericDriverTestsTrait
 {

@@ -2,8 +2,6 @@
 
 namespace Enqueue\Tests\Consumption;
 
-use Enqueue\Consumption\BoundProcessor;
-use Enqueue\Consumption\CallbackProcessor;
 use Enqueue\Consumption\ChainExtension;
 use Enqueue\Consumption\Context\End;
 use Enqueue\Consumption\Context\InitLogger;

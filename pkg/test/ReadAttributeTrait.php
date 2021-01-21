@@ -10,6 +10,7 @@ trait ReadAttributeTrait
         $refProperty->setAccessible(true);
         $value = $refProperty->getValue($object);
         $refProperty->setAccessible(false);
+
         return $value;
     }
 }
