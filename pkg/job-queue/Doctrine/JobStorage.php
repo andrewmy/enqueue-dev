@@ -136,7 +136,7 @@ class JobStorage
                 throw new \LogicException('Is not possible to create new job with lock, only update is allowed');
             }
 
-            $this->getEntityManager()->transactional(function (EntityManager $em) use ($job, $lockCallback) {
+            $this->getEntityManager()->wrapInTransaction(function (EntityManager $em) use ($job, $lockCallback) {
                 /** @var Job $job */
                 $job = $this->getEntityRepository()->find($job->getId(), LockMode::PESSIMISTIC_WRITE);
 

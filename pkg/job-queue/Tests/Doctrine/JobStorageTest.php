@@ -170,7 +170,7 @@ class JobStorageTest extends \PHPUnit\Framework\TestCase
         ;
         $em
             ->expects($this->never())
-            ->method('transactional')
+            ->method('wrapInTransaction')
         ;
         $em
             ->expects($this->any())
@@ -224,7 +224,7 @@ class JobStorageTest extends \PHPUnit\Framework\TestCase
         ;
         $em
             ->expects($this->once())
-            ->method('transactional')
+            ->method('wrapInTransaction')
         ;
         $em
             ->expects($this->any())
@@ -387,7 +387,7 @@ class JobStorageTest extends \PHPUnit\Framework\TestCase
         ;
         $em
             ->expects($this->once())
-            ->method('transactional')
+            ->method('wrapInTransaction')
             ->willReturnCallback(function ($callback) use ($em) {
                 $callback($em);
             })
@@ -536,7 +536,7 @@ class JobStorageTest extends \PHPUnit\Framework\TestCase
         ;
         $em
             ->expects($this->once())
-            ->method('transactional')
+            ->method('wrapInTransaction')
             ->willReturnCallback(function ($callback) use ($em) {
                 $callback($em);
             })
