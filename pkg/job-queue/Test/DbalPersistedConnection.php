@@ -22,10 +22,10 @@ class DbalPersistedConnection extends Connection
      */
     protected static $persistedTransactionNestingLevels;
 
-    public function connect()
+    public function connect(): DriverConnection
     {
         if ($this->isConnected()) {
-            return false;
+            return $this->_conn;
         }
 
         if ($this->hasPersistedConnection()) {
@@ -35,28 +35,22 @@ class DbalPersistedConnection extends Connection
             $this->persistConnection($this->_conn);
         }
 
-        return true;
+        return $this->_conn;
     }
 
-    public function beginTransaction()
+    public function beginTransaction(): void
     {
         $this->wrapTransactionNestingLevel('beginTransaction');
-
-        return true;
     }
 
-    public function commit()
+    public function commit(): void
     {
         $this->wrapTransactionNestingLevel('commit');
-
-        return true;
     }
 
-    public function rollBack()
+    public function rollBack(): void
     {
         $this->wrapTransactionNestingLevel('rollBack');
-
-        return true;
     }
 
     /**
