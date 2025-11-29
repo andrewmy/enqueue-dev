@@ -29,7 +29,7 @@ services:
       - STOMP_DSN=stomp://guest:guest@rabbitmq:61613/mqdev
       - RABITMQ_STOMP_DSN=stomp+rabbitmq://guest:guest@rabbitmq:61613/mqdev
       - RABBITMQ_MANAGMENT_DSN=http://guest:guest@rabbitmq:15672/mqdev
-      - DOCTRINE_DSN=pdo_mysql://root:rootpass@mysql/mqdev
+      - DOCTRINE_DSN=mysql+pdo://root:rootpass@mysql/mqdev
       - DOCTRINE_POSTGRES_DSN=postgres://postgres:pass@postgres/template1
       - MYSQL_DSN=mysql://root:rootpass@mysql/mqdev
       - POSTGRES_DSN=postgres://postgres:pass@postgres/postgres
