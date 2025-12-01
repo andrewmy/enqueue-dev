@@ -9,8 +9,9 @@ $database = trim(parse_url($dsn, \PHP_URL_PATH), '/');
 
 $dbalContext = (new DbalConnectionFactory($dsn))->createContext();
 
-$dbalContext->getDbalConnection()->getSchemaManager()->dropAndCreateDatabase($database);
-$dbalContext->getDbalConnection()->exec('USE '.$database);
+$dbalContext->getDbalConnection()->createSchemaManager()->dropDatabase($database);
+$dbalContext->getDbalConnection()->createSchemaManager()->createDatabase($database);
+$dbalContext->getDbalConnection()->executeQuery('USE '.$database);
 $dbalContext->createDataBaseTable();
 
 echo 'MySQL Database is updated'.\PHP_EOL;

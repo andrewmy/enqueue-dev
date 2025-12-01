@@ -8,7 +8,9 @@ $dsn = getenv('DOCTRINE_POSTGRES_DSN');
 
 $dbalContext = (new DbalConnectionFactory($dsn))->createContext();
 
-$dbalContext->getDbalConnection()->getSchemaManager()->dropAndCreateDatabase('postgres');
+$database = 'postgres';
+$dbalContext->getDbalConnection()->createSchemaManager()->dropDatabase($database);
+$dbalContext->getDbalConnection()->createSchemaManager()->createDatabase($database);
 $dbalContext->createDataBaseTable();
 
 echo 'Postgresql Database is updated'.\PHP_EOL;
