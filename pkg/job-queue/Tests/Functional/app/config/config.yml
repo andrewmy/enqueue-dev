@@ -20,7 +20,6 @@ doctrine:
         charset:  UTF8
         wrapper_class: "Enqueue\\JobQueue\\Test\\DbalPersistedConnection"
     orm:
-        auto_generate_proxy_classes: true
         auto_mapping: true
         mappings:
             TestEntity:
