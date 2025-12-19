@@ -6,12 +6,7 @@ trait ReadAttributeTrait
 {
     public function readAttribute(object $object, string $attribute)
     {
-        $refProperty = $this->getClassAttribute($object, $attribute);
-        $refProperty->setAccessible(true);
-        $value = $refProperty->getValue($object);
-        $refProperty->setAccessible(false);
-
-        return $value;
+        return $this->getClassAttribute($object, $attribute)->getValue($object);
     }
 
     private function getClassAttribute(
