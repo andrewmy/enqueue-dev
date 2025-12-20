@@ -38,6 +38,7 @@
     "predis/predis": "^2.1",
     "thruway/client": "^0.5.5",
     "thruway/pawl-transport": "^0.5.2",
+    "ratchet/pawl": "^0.4.3",
     "influxdb/influxdb-php": "^1.14",
     "datadog/php-datadogstatsd": "^1.3",
     "guzzlehttp/guzzle": "^7.0.1",
