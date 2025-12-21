@@ -44,18 +44,6 @@ jobs:
           PATTERNS: |
             pkg/**/*.php
 
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - uses: actions/cache@v4
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: composer-cs-check-${{ hashFiles('**/composer.json') }}
-          restore-keys: |
-            composer-cs-check-
-
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
@@ -65,7 +53,7 @@ jobs:
 
       - run: php ./bin/fix-symfony-version.php "7.4.*"
 
-      - run: composer update --no-progress
+      - uses: "ramsey/composer-install@v3"
 
       - run: sed -i 's/525568/16777471/' vendor/kwn/php-rdkafka-stubs/stubs/constants.php
 
@@ -79,7 +67,7 @@ jobs:
       matrix:
         php: ['8.2', '8.3', '8.4']
         symfony_version: ['7.3.*', '7.4.*', '8.0.*']
-        dependencies: ['--prefer-lowest', '--prefer-dist']
+        dependencies: ['lowest', 'highest']
         exclude:
           - php: '8.2'
             symfony_version: '8.0.*'
@@ -91,18 +79,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - uses: actions/cache@v4
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: composer-${{ matrix.php }}-${{ matrix.symfony_version }}-${{ matrix.dependencies }}-${{ hashFiles('**/composer.json') }}
-          restore-keys: |
-            composer-${{ matrix.php }}-${{ matrix.symfony_version }}-${{ matrix.dependencies }}-
-
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
@@ -112,7 +88,9 @@ jobs:
 
       - run: php ./bin/fix-symfony-version.php "${{ matrix.symfony_version }}"
 
-      - run: composer update --no-progress ${{ matrix.dependencies }}
+      - uses: "ramsey/composer-install@v3"
+        with:
+          dependency-versions: "${{ matrix.dependencies }}"
 
       - run: sed -i 's/525568/16777471/' vendor/kwn/php-rdkafka-stubs/stubs/constants.php
 
@@ -125,7 +103,7 @@ jobs:
       matrix:
         php: ['8.2', '8.3', '8.4']
         symfony_version: ['7.3.*', '7.4.*', '8.0.*']
-        dependencies: ['--prefer-lowest', '--prefer-dist']
+        dependencies: ['lowest', 'highest']
         exclude:
           - php: '8.2'
             symfony_version: '8.0.*'
@@ -137,18 +115,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - uses: actions/cache@v4
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: composer-${{ matrix.php }}-${{ matrix.symfony_version }}-${{ matrix.dependencies }}-${{ hashFiles('**/composer.json') }}
-          restore-keys: |
-            composer-${{ matrix.php }}-${{ matrix.symfony_version }}-${{ matrix.dependencies }}-
-
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
@@ -158,7 +124,9 @@ jobs:
 
       - run: php ./bin/fix-symfony-version.php "${{ matrix.symfony_version }}"
 
-      - run: composer update --no-progress ${{ matrix.dependencies }}
+      - uses: "ramsey/composer-install@v3"
+        with:
+          dependency-versions: "${{ matrix.dependencies }}"
 
       - run: sed -i 's/525568/16777471/' vendor/kwn/php-rdkafka-stubs/stubs/constants.php
 

@@ -23,7 +23,7 @@ jobs:
           coverage: none
           extensions: redis
 
-      - uses: "ramsey/composer-install@v1"
+      - uses: "ramsey/composer-install@v3"
         with:
           composer-options: "--prefer-source"
 
