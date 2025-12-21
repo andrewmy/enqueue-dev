@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Enqueue\Dbal;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\RetryableException;
 use Ramsey\Uuid\Uuid;
@@ -37,7 +38,7 @@ trait DbalConsumerHelperTrait
             ->andWhere('delivery_id IS NULL')
             ->addOrderBy('priority', 'asc')
             ->addOrderBy('published_at', 'asc')
-            ->setParameter('queues', $queues, Connection::PARAM_STR_ARRAY)
+            ->setParameter('queues', $queues, ArrayParameterType::STRING)
             ->setParameter('delayedUntil', $now, DbalType::INTEGER)
             ->setMaxResults(1);
 
@@ -53,7 +54,7 @@ trait DbalConsumerHelperTrait
 
         while (microtime(true) < $endAt) {
             try {
-                $result = $select->execute()->fetchAssociative();
+                $result = $select->executeQuery()->fetchAssociative();
                 if (empty($result)) {
                     return null;
                 }
@@ -61,14 +62,14 @@ trait DbalConsumerHelperTrait
                 $update
                     ->setParameter('messageId', $result['id'], DbalType::GUID);
 
-                if ($update->execute()) {
+                if ($update->executeQuery()) {
                     $deliveredMessage = $this->getConnection()->createQueryBuilder()
                         ->select('*')
                         ->from($this->getContext()->getTableName())
                         ->andWhere('delivery_id = :deliveryId')
                         ->setParameter('deliveryId', $deliveryId, DbalType::GUID)
                         ->setMaxResults(1)
-                        ->execute()
+                        ->executeQuery()
                         ->fetchAssociative();
 
                     // the message has been removed by a 3rd party, such as truncate operation.
@@ -108,7 +109,7 @@ trait DbalConsumerHelperTrait
         ;
 
         try {
-            $update->execute();
+            $update->executeQuery();
 
             $this->redeliverMessagesLastExecutedAt = microtime(true);
         } catch (RetryableException $e) {
@@ -135,7 +136,7 @@ trait DbalConsumerHelperTrait
         ;
 
         try {
-            $delete->execute();
+            $delete->executeQuery();
         } catch (RetryableException $e) {
             // maybe next time we'll get more luck
         }

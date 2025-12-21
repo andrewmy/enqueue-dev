@@ -59,8 +59,18 @@ class ManagerRegistryConnectionFactory implements ConnectionFactory
 
     private function establishConnection(): Connection
     {
+        /** @var Connection $connection */
         $connection = $this->registry->getConnection($this->config['connection_name']);
-        $connection->connect();
+        if (
+            method_exists($connection, 'connect')
+            && (new \ReflectionMethod($connection, 'connect'))->isPublic()
+        ) {
+            // DBAL < 4
+            $connection->connect();
+        } else {
+            // DBAL >= 4, calls connect() internally
+            $connection->getServerVersion();
+        }
 
         return $connection;
     }

@@ -18,7 +18,7 @@ class LimitsExtensionsCommand extends Command
         return $this->extensions;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 

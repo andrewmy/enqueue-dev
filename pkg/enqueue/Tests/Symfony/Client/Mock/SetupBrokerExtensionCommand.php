@@ -22,7 +22,7 @@ class SetupBrokerExtensionCommand extends Command
         return $this->extension;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 

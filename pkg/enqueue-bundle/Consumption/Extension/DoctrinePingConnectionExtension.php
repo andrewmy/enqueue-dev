@@ -36,7 +36,16 @@ class DoctrinePingConnectionExtension implements MessageReceivedExtensionInterfa
             );
 
             $connection->close();
-            $connection->connect();
+            if (
+                method_exists($connection, 'connect')
+                && (new \ReflectionMethod($connection, 'connect'))->isPublic()
+            ) {
+                // DBAL < 4
+                $connection->connect();
+            } else {
+                // DBAL >= 4, calls connect() internally
+                $connection->getServerVersion();
+            }
 
             $context->getLogger()->debug(
                 '[DoctrinePingConnectionExtension] Connection is active now.'

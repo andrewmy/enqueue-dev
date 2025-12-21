@@ -10,8 +10,10 @@
         "queue-interop/queue-interop": "^0.8.1",
         "enqueue/dsn": "^0.10.8",
         "thruway/client": "^0.5.5",
-        "thruway/pawl-transport": "^0.5.1",
+        "thruway/pawl-transport": "^0.5.2",
         "voryx/thruway-common": "^1.0.1",
+        "ratchet/pawl": "^0.4.3",
+        "ratchet/rfc6455": "^0.4.0",
         "react/dns": "^1.4",
         "react/event-loop": "^1.2",
         "react/promise": "^2.8"

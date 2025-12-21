@@ -6,6 +6,7 @@ namespace Enqueue\Dbal;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Tools\DsnParser;
 use Enqueue\Dsn\Dsn;
 use Interop\Queue\ConnectionFactory;
 use Interop\Queue\Context;
@@ -86,7 +87,17 @@ class DbalConnectionFactory implements ConnectionFactory
     {
         if (false == $this->connection) {
             $this->connection = DriverManager::getConnection($this->config['connection']);
-            $this->connection->connect();
+            if (
+                method_exists($this->connection, 'connect')
+                && (new \ReflectionMethod($this->connection, 'connect'))->isPublic()
+            ) {
+                // TODO: remove check when dropping support for DBAL < 4
+                // DBAL < 4
+                $this->connection->connect();
+            } else {
+                // DBAL >= 4
+                $this->connection->getServerVersion(); // calls connect() internally
+            }
         }
 
         return $this->connection;
@@ -96,18 +107,21 @@ class DbalConnectionFactory implements ConnectionFactory
     {
         $parsedDsn = Dsn::parseFirst($dsn);
 
+        // enqueue scheme => dbal scheme
+        // out of the box dbal 4 schemes: pdo_mysql, pdo_sqlite, pdo_pgsql, pdo_oci, oci8, ibm_db2, pdo_sqlsrv, mysqli, pgsql, sqlsrv, sqlite3
+        // in case of multiple drivers like mysqli vs pdo_mysql the pdo variant is preferred
         $supported = [
-            'db2' => 'db2',
-            'ibm-db2' => 'ibm-db2',
-            'mssql' => 'mssql',
+            'db2' => 'ibm_db2',
+            'ibm-db2' => 'ibm_db2',
+            'mssql' => 'pdo_sqlsrv',
             'sqlsrv+pdo' => 'pdo_sqlsrv',
-            'mysql' => 'mysql',
-            'mysql2' => 'mysql2',
+            'mysql' => 'pdo_mysql',
+            'mysql2' => 'mysqli',
             'mysql+pdo' => 'pdo_mysql',
             'pgsql' => 'pgsql',
-            'postgres' => 'postgres',
+            'postgres' => 'pdo_pgsql',
             'pgsql+pdo' => 'pdo_pgsql',
-            'sqlite' => 'sqlite',
+            'sqlite' => 'sqlite3',
             'sqlite3' => 'sqlite3',
             'sqlite+pdo' => 'pdo_sqlite',
         ];
@@ -133,13 +147,22 @@ class DbalConnectionFactory implements ConnectionFactory
             ];
         }
 
+        if ($dsnHasProtocolOnly) {
+            $dsn = $parsedDsn->getScheme().'://root@localhost';
+        }
+
+        $dsnParser = new DsnParser($supported);
+
+        // replace scheme with the matching one from the supported list, but the prefixes there are "pdo-" not "pdo_"
+        $dsn = preg_replace(
+            '/^'.preg_quote($parsedDsn->getScheme(), '/').'(:|:\/\/)/',
+            str_replace('_', '-', $supported[$parsedDsn->getScheme()]).'$1',
+            $dsn,
+        );
+
         return [
             'lazy' => true,
-            'connection' => [
-                'url' => $dsnHasProtocolOnly ?
-                    $doctrineScheme.'://root@localhost' :
-                    str_replace($parsedDsn->getScheme(), $doctrineScheme, $dsn),
-            ],
+            'connection' => $dsnParser->parse($dsn),
         ];
     }
 }
