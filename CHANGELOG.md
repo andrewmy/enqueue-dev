@@ -1,5 +1,13 @@
 # Change Log
 
+## [0.10.27](https://github.com/php-enqueue/enqueue-dev/tree/0.10.27) (2025-12-21)
+[Full Changelog](https://github.com/php-enqueue/enqueue-dev/compare/0.10.26...0.10.27)
+
+**Merged pull requests:**
+
+- Support PHP 8.3–8.4 and Symfony 7.3–8.0 [\#1397](https://github.com/php-enqueue/enqueue-dev/pull/1397) ([andrewmy](https://github.com/andrewmy))
+- add symfony 7 support + adjust CI for simple-client package [\#1391](https://github.com/php-enqueue/enqueue-dev/pull/1391) ([LordSimal](https://github.com/LordSimal))
+
 ## [0.10.26](https://github.com/php-enqueue/enqueue-dev/tree/0.10.26) (2025-05-10)
 [Full Changelog](https://github.com/php-enqueue/enqueue-dev/compare/0.10.25...0.10.26)
 
